@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String  @id @default(cuid())
+  email          String  @unique
+  password       String?
+  fullName       String  @map("full_name")
+  nim            String? @unique @map("nim")
+  major          String?
+  batch          String?
+  phoneNumber    String? @map("phone_number")
+  profilePicture String? @map("profile_picture")
+  bio            String?
+
+  googleId String? @unique @map("google_id")
+  provider String  @default("email")
+
+  isVerified      Boolean   @default(false) @map("is_verified")
+  emailVerifiedAt DateTime? @map("email_verified_at")
+
+  isSeller             Boolean @default(false) @map("is_seller")
+  avgRating            Decimal @default(0) @map("avg_rating") @db.Decimal(3, 2)
+  totalReviews         Int     @default(0) @map("total_reviews")
+  totalOrdersCompleted Int     @default(0) @map("total_orders_completed")
+
+  status String @default("active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
